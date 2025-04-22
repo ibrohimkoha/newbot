@@ -44,14 +44,14 @@ async def start_handler(message: types.Message, command: CommandObject):
                         await message.answer("Botimga hush kelibman", reply_markup=await admin_main_menu_def())
                         return
                     else:
-                        await message.answer("Botimga hush kelibsiz @iskurama", reply_markup=await user_main_menu_def())
+                        await message.answer(f"Botga hush kelibsiz {message.from_user.first_name}", reply_markup=await user_main_menu_def())
                         return
     except ValueError:
             if message.from_user.id in ADMINS:
                 await message.answer("Botimga hush kelibman", reply_markup=await admin_main_menu_def())
                 return
             else:
-                await message.answer("Botimga hush kelibsiz @iskurama", reply_markup=await user_main_menu_def())
+                await message.answer(f"Botga hush kelibsiz {message.from_user.first_name}", reply_markup=await user_main_menu_def())
                 return
 
 @router.message(CommandStart())
@@ -62,4 +62,4 @@ async def start(message: types.Message):
     if user_id in ADMINS:
         await message.answer("Botimga hush kelibman", reply_markup=await admin_main_menu_def())
     else:
-        await message.answer("Botimga hush kelibsiz @iskurama", reply_markup=await user_main_menu_def())
+        await message.answer(f"Botga hush kelibsiz {message.from_user.first_name}", reply_markup=await user_main_menu_def())

@@ -1,7 +1,6 @@
 from aiogram import types, Router, F
 from aiogram.fsm.context import FSMContext
 from aiogram.fsm.state import StatesGroup, State
-from django.templatetags.i18n import language
 from sqlalchemy import select, desc
 
 from routers.database.database import get_session

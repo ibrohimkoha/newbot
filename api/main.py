@@ -1,7 +1,5 @@
 from typing import List
 import bcrypt
-from django.db.models.fields import return_None
-
 from api.dependencies.JWT.handlers import JWTHandler
 from api.dependencies.JWT.bearer import JWTBearer
 from api.functions.admin import has_admin, get_admin_data

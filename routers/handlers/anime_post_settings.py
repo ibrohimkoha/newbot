@@ -152,12 +152,6 @@ async def cmd_prepare_post(message: types.Message, state: FSMContext):
 async def process_anime_code(message: types.Message, state: FSMContext):
     try:
         code = int(message.text.strip())
-        if not code.isdigit():
-            return await message.answer(
-                "Iltimos, to‘g‘ri raqam kiriting:",
-                reply_markup=await cancel_keyboard()
-            )
-
         async with get_session() as session:
             result = await session.execute(select(Anime).where(Anime.unique_id == code))
             anime = result.scalar_one_or_none()
