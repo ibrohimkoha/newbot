@@ -22,7 +22,9 @@ class SearchAnimeCode(StatesGroup):
 
 @router.callback_query(F.data == "sort_by_id")
 async def sort_by_id(callback: types.CallbackQuery, state: FSMContext):
+    await callback.message.delete()
     await callback.message.answer("Iltimos qidirmoqchi bo'lgan animeni kodini kirting: ", reply_markup=await cancel_keyboard())
+    await callback.answer()
     await state.set_state(SearchAnimeCode.code)
 #
 @router.message(SearchAnimeCode.code, F.text)

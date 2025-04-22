@@ -7,7 +7,7 @@ import uvicorn
 
 
 
-WEBHOOK_HOST = 'https://479f-213-206-60-155.ngrok-free.app'  # Webhook URL manzili
+WEBHOOK_HOST = 'https://dd31-213-206-60-187.ngrok-free.app'  # Webhook URL manzili
 WEBHOOK_PATH = '/webhook'  # Webhook endpoint
 WEBHOOK_URL = WEBHOOK_HOST + WEBHOOK_PATH
 # FastAPI endpointlari

@@ -4,7 +4,6 @@ from datetime import datetime, date
 
 from aiogram import Bot
 from aiogram.types import ChatMember
-from requests import session
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from routers.database.database import AsyncSessionLocal
@@ -149,7 +148,7 @@ class Post(SQLModel, table=True):
     )
 
     id: Optional[int] = Field(default=None, primary_key=True)
-    channel_id: int = Field(foreign_key="channels.id", nullable=False)
+    channel_id: Optional[int] = Field(default=None, foreign_key="channels.id")
     anime_id: int = Field(foreign_key="animes.id", nullable=False)
     message_id: int = Field(..., unique=True)
     created_at: datetime = Field(

@@ -148,18 +148,10 @@ async def get_anime_episode(callback: CallbackQuery):
                 await callback.answer()
                 return
 
-            # Avvalgi xabarni o‘chirishga harakat qilish (agar bo‘lsa)
-            with suppress(Exception):
-                await callback.message.delete()
-
             await callback.message.answer_video(
                 video=episode.video_id,
-                caption=f"{anime.title} - {episode.episode_number}",
-                reply_markup=InlineKeyboardMarkup(
-                    inline_keyboard=[[
-                        InlineKeyboardButton(text="⬅️ Ortga", callback_data=f"get_language_anime_{anime.id}_{language.id}_{page_number}")
-                    ]]
-                )
+                caption=f"{anime.title} - {episode.episode_number}"
+
             )
 
             with suppress(Exception):

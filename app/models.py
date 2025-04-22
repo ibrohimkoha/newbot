@@ -140,8 +140,9 @@ class Channel(models.Model):
 class Post(models.Model):
     channel = models.ForeignKey(
         Channel,
-        on_delete=models.CASCADE,
-        related_name='posts'
+        on_delete=models.SET_NULL,
+        related_name='posts',
+        null=True
     )
     anime = models.ForeignKey(
         Anime,

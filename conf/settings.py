@@ -25,7 +25,7 @@ SECRET_KEY = 'django-insecure-xs4=12cv1c%(kll4zl&e2ab!v7aq&uzdiwy3h$9%&4f4a9iekq
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["*"]
 
 
 # Application definition
@@ -126,3 +126,6 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+CSRF_TRUSTED_ORIGINS = [
+    "https://iskurama.duckdns.org",
+]

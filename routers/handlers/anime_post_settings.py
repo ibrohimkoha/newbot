@@ -117,17 +117,19 @@ async def cmd_delete_channel(message: types.Message, state: FSMContext):
 
 @router.message(DeleteChannelStates.channel, F.text)
 async def process_delete_channel(message: types.Message, state: FSMContext):
-    ch_id = int(message.text.strip())
-    async with get_session() as session:
-        channel = (await session.execute(select(Channel).where(Channel.id == ch_id))).scalar()
-        if not channel:
-            await message.answer("Kanal topilmadi!", reply_markup=await admin_post_menu_def())
-            await state.clear()
-            return
-        await session.delete(channel)
-        await session.commit()
-        await message.answer("✅ Kanal o'chirildi!", reply_markup=await admin_post_menu_def())
-    await state.clear()
+    try:
+        ch_id = int(message.text.strip())
+        async with get_session() as session:
+            channel = (await session.execute(select(Channel).where(Channel.channel_id == ch_id))).scalar()
+            if not channel:
+                await message.answer("Kanal topilmadi!", reply_markup=await admin_post_menu_def())
+                return
+            await session.delete(channel)
+            await session.commit()
+            await message.answer("✅ Kanal o'chirildi!", reply_markup=await admin_post_menu_def())
+        await state.clear()
+    except ValueError:
+        await message.answer(text="Iltimos raqamda kiriting: ", reply_markup=await cancel_keyboard())
 
 class WaitingForPost(StatesGroup):
     anime_code     = State()   # 1‑bosqich: kod so‘rash
@@ -148,55 +150,58 @@ async def cmd_prepare_post(message: types.Message, state: FSMContext):
 # 2) Anime kodini qabul qilib, bazadan olish va kanallarni ko‘rsatish
 @router.message(WaitingForPost.anime_code, F.text)
 async def process_anime_code(message: types.Message, state: FSMContext):
-    code = message.text.strip()
-    if not code.isdigit():
-        return await message.answer(
-            "Iltimos, to‘g‘ri raqam kiriting:",
-            reply_markup=await cancel_keyboard()
-        )
+    try:
+        code = int(message.text.strip())
+        if not code.isdigit():
+            return await message.answer(
+                "Iltimos, to‘g‘ri raqam kiriting:",
+                reply_markup=await cancel_keyboard()
+            )
 
-    async with get_session() as session:
-        result = await session.execute(select(Anime).where(Anime.unique_id == int(code)))
-        anime = result.scalar_one_or_none()
+        async with get_session() as session:
+            result = await session.execute(select(Anime).where(Anime.unique_id == code))
+            anime = result.scalar_one_or_none()
 
-    if not anime:
-        return await message.answer(
-            "Bunday kodli anime topilmadi. Qayta kiriting:",
-            reply_markup=await cancel_keyboard()
-        )
+        if not anime:
+            return await message.answer(
+                "Bunday kodli anime topilmadi. Qayta kiriting:",
+                reply_markup=await cancel_keyboard()
+            )
 
-    await state.update_data(anime_id=anime.id)
+        await state.update_data(anime_id=anime.id)
 
-    # Kanallarni olish
-    async with get_session() as session:
-        ch_res = await session.execute(select(Channel))
-        channels = ch_res.scalars().all()
+        # Kanallarni olish
+        async with get_session() as session:
+            ch_res = await session.execute(select(Channel))
+            channels = ch_res.scalars().all()
 
-    if not channels:
-        await message.answer(
-            "Hozircha kanal ro‘yxati bo‘sh!",
-            reply_markup=await admin_post_menu_def()
-        )
-        return await state.clear()
+        if not channels:
+            await message.answer(
+                "Hozircha kanal ro‘yxati bo‘sh!",
+                reply_markup=await admin_post_menu_def()
+            )
+            return await state.clear()
 
-    # Inline keyboard bilan ko‘rsatamiz
-    kb = InlineKeyboardMarkup(
-        inline_keyboard=[
-            [
-                InlineKeyboardButton(
-                    text=ch.name or str(ch.channel_id),
-                    callback_data=f"post_to_channel_{ch.id}_{anime.id}"
-                )
+        # Inline keyboard bilan ko‘rsatamiz
+        kb = InlineKeyboardMarkup(
+            inline_keyboard=[
+                [
+                    InlineKeyboardButton(
+                        text=ch.name or str(ch.channel_id),
+                        callback_data=f"post_to_channel_{ch.id}_{anime.id}"
+                    )
+                ]
+                for ch in channels
             ]
-            for ch in channels
-        ]
-    )
-    await message.answer(
-        f"Anime: <b>{anime.title}</b>\nKanallardan birini tanlang:",
-        reply_markup=kb,
-        parse_mode="HTML"
-    )
-    await state.clear()
+        )
+        await message.answer(
+            f"Anime: <b>{anime.title}</b>\nKanallardan birini tanlang:",
+            reply_markup=kb,
+            parse_mode="HTML"
+        )
+        await state.clear()
+    except ValueError:
+        await message.answer(text="Iltimos raqamda kiriting: ", reply_markup=await cancel_keyboard())
 
 # 3) Kanal tanlanganda postni yuborish
 @router.callback_query(F.data.startswith("post_to_channel_"))
