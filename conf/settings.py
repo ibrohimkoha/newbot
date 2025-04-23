@@ -12,6 +12,8 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 
 from pathlib import Path
 
+from config import domen, DB_NAME, DB_USER, DB_PASSWORD, DB_HOST, DB_PORT
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -77,11 +79,11 @@ WSGI_APPLICATION = 'conf.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'iskuramadb',
-        'USER': 'postgres',
-        'PASSWORD': 'postgres',
-        'HOST': 'localhost',
-        'PORT': '5432',
+        'NAME': f'{DB_NAME}',
+        'USER': f'{DB_USER}',
+        'PASSWORD': f'{DB_PASSWORD}',
+        'HOST': f'{DB_HOST}',
+        'PORT': f'{DB_PORT}',
     }
 }
 
@@ -127,5 +129,5 @@ STATIC_URL = 'static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 CSRF_TRUSTED_ORIGINS = [
-    "https://iskurama.duckdns.org",
+    f"https://{domen}",
 ]

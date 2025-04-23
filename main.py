@@ -3,11 +3,12 @@ from loader import dp, bot
 from fastapi import FastAPI, Request
 from aiogram import types
 from loader import app
+from config import domen, port
 import uvicorn
 
 
 
-WEBHOOK_HOST = 'https://iskurama.duckdns.org'  # Webhook URL manzili
+WEBHOOK_HOST = f'https://{domen}'  # Webhook URL manzili
 WEBHOOK_PATH = '/webhook'  # Webhook endpoint
 WEBHOOK_URL = WEBHOOK_HOST + WEBHOOK_PATH
 # FastAPI endpointlari
@@ -30,7 +31,7 @@ async def on_start():
 # FastAPI va Aiogram parallel ishga tushirish
 async def uvicorn_server():
     """FastAPI serverini ishga tushirish"""
-    config = uvicorn.Config(app, host="0.0.0.0", port=8000)
+    config = uvicorn.Config(app, host="0.0.0.0", port=port)
     server = uvicorn.Server(config)
     await server.serve()  # `async` rejimda ishlatish
 

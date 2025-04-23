@@ -3,6 +3,7 @@ from aiogram.client.default import DefaultBotProperties
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from aiogram.fsm.storage.redis import RedisStorage, DefaultKeyBuilder
+from config import TOKEN
 from redis.asyncio import Redis
 
 
@@ -19,7 +20,7 @@ from routers.handlers.user import search_anime
 from routers.middlewares.middlewares import CheckRequiredChannelsMiddleware
 app = FastAPI()
 app.include_router(router)
-TOKEN = "7960221234:AAGM_p6SapJBkb0T-xS45y_q2Sv1b_0tCaM"
+
 
 app.add_middleware(
     CORSMiddleware,

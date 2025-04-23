@@ -7,14 +7,14 @@ from routers.database.database import get_session
 from routers.database.models import Anime, AnimeLanguage, Episode
 from routers.keyboards.keyboard import cancel_keyboard, get_sort_buttons
 from text_form import response_for_anime
-
+from config import image_for_bot
 router = Router()
 
 
 
 @router.message(F.text == "🫀 Animelar")
 async def get_anime(message: types.Message):
-    await message.answer_photo(photo="https://ibb.co/1YMH3PjL",caption=f". .  ── •✧⛩✧• ──  . .• Animelarni biz bilan tomosha qilish yanada osonroq  o((≧ω≦ ))o", reply_markup=await get_sort_buttons())
+    await message.answer_photo(photo=image_for_bot,caption=f". .  ── •✧⛩✧• ──  . .• Animelarni biz bilan tomosha qilish yanada osonroq  o((≧ω≦ ))o", reply_markup=await get_sort_buttons())
 
 class SearchAnimeCode(StatesGroup):
     code = State()
