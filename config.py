@@ -1,8 +1,8 @@
 from dotenv import load_dotenv
 import os
-
+ADMINS = {}
 load_dotenv()
-image_for_bot = "https://ibb.co/1YMH3PjL"
+image_for_bot = "https://ibb.co/fzyKgSMg"
 API_KEY = os.getenv("API_KEY")
 TOKEN = os.getenv("TOKEN")
 DOMEN = os.getenv("DOMEN")
