@@ -1,0 +1,53 @@
+# Python asosiy fayllari
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Virtual muhitlar
+venv/
+env/
+.venv/
+.env/
+
+# IDE va editor fayllari
+.vscode/
+.idea/
+
+# Testlar va qoldiq fayllar
+*.log
+*.pot
+*.pyc
+*.pyo
+*.db
+*.sqlite3
+
+# OS fayllari
+.DS_Store
+Thumbs.db
+
+# Jupyter Notebook fayllari
+.ipynb_checkpoints/
+
+# Pycharm fayllari
+*.iml
+
+# Secret fayllar
+.env
+*.env
+
+# Coverage va pytest
+htmlcov/
+.tox/
+.coverage
+.cache
+nosetests.xml
+coverage.xml
+*.cover
+*.py,cover
+.pytest_cache/
+
+# build fayllari
+build/
+dist/
+*.egg-info/
+.eggs/
