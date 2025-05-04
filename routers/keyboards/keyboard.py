@@ -6,7 +6,8 @@ async def admin_main_menu_def():
         keyboard=[
             [KeyboardButton(text="🫀 Animeni sozlash"), KeyboardButton(text="🌎 Animeni tlini sozlash")],
             [KeyboardButton(text="📮 Post sozlamalari"), KeyboardButton(text="📊 Statistika")],
-            [KeyboardButton(text="🫀 Animelar"), KeyboardButton(text="📢 Majburiy kanal sozlamalari")]
+            [KeyboardButton(text="🫀 Animelar"), KeyboardButton(text="📢 Majburiy kanal sozlamalari")],
+            [KeyboardButton(text="💬 Habar yuborish sozlamalari")]
         ],
         resize_keyboard=True
     )
@@ -93,6 +94,21 @@ async def edit_anime_menu():
     )
     return markup
 
+async def admin_message_menu_def():
+    markup = ReplyKeyboardMarkup(
+        keyboard=[
+            [KeyboardButton(text="💬 Habar yuborish oddiy"), KeyboardButton(text="⚙️ Habar yuborish inline")],
+            [KeyboardButton(text="🍥 Anime habar yuborish")],
+            [KeyboardButton(text="🖼️ Rasmli habar"), KeyboardButton(text="🎥 Video bilan habar")],
+            [KeyboardButton(text="📎 Fayl yuborish"), KeyboardButton(text="🔁 Habarni forward qilish")],
+            [KeyboardButton(text="⏱️ Rejalashtirish")],
+            [KeyboardButton(text="👤 Admin panelga qaytish")],
+        ],
+        resize_keyboard=True
+    )
+    return markup
+
+
 async def edit_language_keyboard(anime, lang):
     markup = InlineKeyboardMarkup(
         inline_keyboard=[
@@ -144,6 +160,7 @@ async def get_sort_buttons():
         [
             # InlineKeyboardButton(text="👁 Ko‘p ko‘rilgan", callback_data="sort_by_views"),
             InlineKeyboardButton(text="🆕 So‘nggi yuklangan", callback_data="sort_by_latest"),
+            # InlineKeyboardButton(text="Suniy intellektdan so'rash ", callback_data="use_ai")
         ]
     ])
     return keyboard

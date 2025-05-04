@@ -1,5 +1,6 @@
 from aiogram import Router, types
 from aiogram.filters import CommandStart, CommandObject
+from aiogram.fsm.context import FSMContext
 from aiogram.types import InlineKeyboardButton, InlineKeyboardMarkup
 from sqlalchemy import select
 from routers.database.database import get_session
@@ -12,7 +13,8 @@ router = Router()
 
 # /start komandasi argument bilan kelganda
 @router.message(CommandStart(deep_link=True))
-async def start_handler(message: types.Message, command: CommandObject):
+async def start_handler(message: types.Message, command: CommandObject, state: FSMContext):
+    await state.clear()
     # `message.get_args()` orqali start parametrini olamiz
     start_param = command.args
 
@@ -55,7 +57,8 @@ async def start_handler(message: types.Message, command: CommandObject):
                 return
 
 @router.message(CommandStart())
-async def start(message: types.Message):
+async def start(message: types.Message, state: FSMContext):
+    await state.clear()
     # Foydalanuvchini bazaga qo'shish
     user_id = message.from_user.id
     # Adminlarni tekshirish

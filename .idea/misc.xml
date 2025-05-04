@@ -3,5 +3,5 @@
   <component name="Black">
     <option name="sdkName" value="Python 3.12 (newbot)" />
   </component>
-  <component name="ProjectRootManager" version="2" project-jdk-name="Python 3.12 (newbot)" project-jdk-type="Python SDK" />
+  <component name="ProjectRootManager" version="2" project-jdk-name="Python 3.13 virtualenv at ~/Desktop/telegram-bots/newbot/venv" project-jdk-type="Python SDK" />
 </project>

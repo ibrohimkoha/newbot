@@ -75,3 +75,67 @@ class CheckRequiredChannelsMiddleware(BaseMiddleware):
         # Assuming you're using SQLAlchemy or an equivalent async DB method to fetch active required channels
         # You can replace the following query with your own DB logic
         return await RequiredChannel.query.filter(RequiredChannel.is_active == True).all()
+
+class CheckRequiredChannelsCallbackMiddleware(BaseMiddleware):
+    async def __call__(
+            self,
+            handler: Callable[[types.CallbackQuery, Dict[str, Any]], Awaitable[Any]],
+            event: types.CallbackQuery,
+            data: Dict[str, Any]
+    ) -> Any:
+        async with get_session() as session:
+            user_id = event.from_user.id
+            bot: Bot = data['bot']
+
+            # Check if the user is an employee
+            is_employee = await get_employee_by_chat_id(chat_id=user_id, session=session)
+            if is_employee:
+                return await handler(event, data)
+
+            if not await user_exists(chat_id=user_id, session=session):
+                await add_user(chat_id=user_id, db=session)
+
+            user = await get_user(chat_id=user_id, db=session)
+
+            required_channels = await get_required_channels(db=session)
+
+            if not required_channels:
+                return await handler(event, data)
+
+            markup = InlineKeyboardMarkup(inline_keyboard=[])
+
+            for channel in required_channels:
+                if not channel.is_active:
+                    continue
+
+                is_subscribed = await check_subscription(
+                    user_id=user_id,
+                    community_chat_id=channel.channel_id,
+                    bot=bot
+                )
+
+                if not is_subscribed:
+                    button = InlineKeyboardButton(
+                        text=f"Obuna bo'lish: {channel.name}",
+                        url=f"https://t.me/{channel.username}"
+                    )
+                    markup.inline_keyboard.append([button])
+
+            if markup.inline_keyboard:
+                markup.inline_keyboard.append([
+                    InlineKeyboardButton(
+                        text="Obunani tekshirish  ⭕️",
+                        callback_data="check_required_channels"
+                    )
+                ])
+
+                # Javob beriladi (xabarni o‘zgartirish yoki javob yuborish mumkin)
+
+                await event.message.answer(
+                    text="Botdan foydalanish uchun quyidagi kanallarga obuna bo'ling ❌",
+                    reply_markup=markup
+                )
+                await event.answer()
+                return
+
+            return await handler(event, data)

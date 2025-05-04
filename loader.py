@@ -15,9 +15,11 @@ from routers.handlers import (anime_settings,
                               inline_mode_query,
                               start,
                               required_channel_setting,
-                              statistika)
+                              statistika,
+                              message_settings)
 from routers.handlers.user import search_anime
-from routers.middlewares.middlewares import CheckRequiredChannelsMiddleware
+# from routers.handlers.ai import chat
+from routers.middlewares.middlewares import CheckRequiredChannelsMiddleware, CheckRequiredChannelsCallbackMiddleware
 app = FastAPI()
 app.include_router(router)
 
@@ -38,7 +40,7 @@ storage = RedisStorage(redis=redis, key_builder=DefaultKeyBuilder())
 bot = Bot(token=TOKEN,default=DefaultBotProperties(parse_mode="HTML"))
 dp = Dispatcher(storage=storage)
 dp.message.middleware(CheckRequiredChannelsMiddleware())
-
+dp.callback_query.middleware(CheckRequiredChannelsCallbackMiddleware())
 
 # Routerlarni shu yerda qo‘shasiz
 dp.include_router(start.router)
@@ -50,3 +52,5 @@ dp.include_router(inline_mode_query.router)
 dp.include_router(required_channel_setting.router)
 dp.include_router(statistika.router)
 dp.include_router(search_anime.router)
+dp.include_router(message_settings.router)
+# dp.include_router(chat.router)

@@ -253,7 +253,7 @@ async def process_image(message: types.Message, state: FSMContext):
 async def invalid_image(message: types.Message, state: FSMContext):
     await message.answer("❗ Iltimos, rasm yuboring!")
 
-@router.message(AnimeCreateState.save_anime)
+@router.message(AnimeCreateState.save_anime, F.text)
 async def finalize(message: types.Message, state: FSMContext):
     text = message.text.lower()
     if text in ["ha", "tasdiqlayman", "✅"]:
@@ -294,7 +294,7 @@ async def read_anime(message: types.Message, state: FSMContext):
     await state.set_state(ReadAnimeForm.code)
     await message.answer("Iltimos animeni kodini kiriting", reply_markup=await cancel_keyboard())
 
-@router.message(ReadAnimeForm.code)
+@router.message(ReadAnimeForm.code, F.text)
 async def search_by_code(message: types.Message, state :FSMContext):
     try:
         code = int(message.text)
@@ -373,7 +373,7 @@ async def process_delete_by_code(message: types.Message, state :FSMContext):
 
 
 
-@router.message(AnimeDeletionForm.code)
+@router.message(AnimeDeletionForm.code, F.text)
 async def delete_anime_by_code(message: types.Message, state: FSMContext):
     try:
         code = int(message.text)
@@ -407,7 +407,7 @@ async def edit_by_code_for_name(message: types.Message, state: FSMContext):
 class AnimeEditname(StatesGroup):
     name = State()
 
-@router.message(AnimeEditionFormforname.code)
+@router.message(AnimeEditionFormforname.code, F.text)
 async def edit_for_name(message: types.Message, state: FSMContext):
     try:
         code = int(message.text.strip())
@@ -423,7 +423,7 @@ async def edit_for_name(message: types.Message, state: FSMContext):
     except ValueError:
         await message.answer(text="Iltimos kodni raqamda kiriting", reply_markup=await cancel_keyboard())
 
-@router.message(AnimeEditname.name)
+@router.message(AnimeEditname.name, F.text)
 async def name_process(message: types.Message, state: FSMContext):
     name = message.text.strip()
     if len(name) > 100:
@@ -449,7 +449,7 @@ async def edit_by_code_for_genre(message: types.Message, state: FSMContext):
 class AnimeEditgenre(StatesGroup):
     genre = State()
 
-@router.message(AnimeEditionFormforgenre.code)
+@router.message(AnimeEditionFormforgenre.code, F.text)
 async def edit_for_genre(message: types.Message, state: FSMContext):
     try:
         code = int(message.text.strip())
@@ -465,7 +465,7 @@ async def edit_for_genre(message: types.Message, state: FSMContext):
     except ValueError:
         await message.answer(text="Iltimos kodni sonda kirting: ", reply_markup=await cancel_keyboard())
 
-@router.message(AnimeEditgenre.genre)
+@router.message(AnimeEditgenre.genre, F.text)
 async def genre_process(message: types.Message, state: FSMContext):
     genre = message.text.strip()
     if len(genre) > 100:
@@ -494,7 +494,7 @@ class AnimeEditcount_episode(StatesGroup):
     count_episode = State()
 
 
-@router.message(AnimeEditionFormforcount_episode.code)
+@router.message(AnimeEditionFormforcount_episode.code, F.text)
 async def edit_for_count_episode(message: types.Message, state: FSMContext):
     try:
         code = int(message.text.strip())
@@ -511,7 +511,7 @@ async def edit_for_count_episode(message: types.Message, state: FSMContext):
         await message.answer(text="Ilimos kodni sonda kiriting: ", reply_markup=await cancel_keyboard())
 
 
-@router.message(AnimeEditcount_episode.count_episode)
+@router.message(AnimeEditcount_episode.count_episode, F.text)
 async def count_episode_process(message: types.Message, state: FSMContext):
     try:
         count_episodes = int(message.text.strip())
@@ -542,7 +542,7 @@ async def edit_by_code_for_image(message: types.Message, state: FSMContext):
 class AnimeEditimage(StatesGroup):
     image = State()
 
-@router.message(AnimeEditionFormforimage.code)
+@router.message(AnimeEditionFormforimage.code, F.text)
 async def edit_for_image(message: types.Message, state: FSMContext):
     try:
         code = int(message.text.strip())
@@ -600,7 +600,7 @@ class AnimeEditionFormforrelease_date(StatesGroup):
 class AnimeEditrelease_date(StatesGroup):
     release_date = State()
 
-@router.message(AnimeEditionFormforrelease_date.code)
+@router.message(AnimeEditionFormforrelease_date.code, F.text)
 async def edit_for_release_date(message: types.Message, state: FSMContext):
     try:
         code = int(message.text.strip())
@@ -615,7 +615,7 @@ async def edit_for_release_date(message: types.Message, state: FSMContext):
     except ValueError:
         await message.answer("Iltimos kodni raqamda kiriting", reply_markup=await cancel_keyboard())
 
-@router.message(AnimeEditrelease_date.release_date)
+@router.message(AnimeEditrelease_date.release_date, F.text)
 async def release_date_process(message: types.Message, state: FSMContext):
     text = message.text.strip()
     try:
@@ -650,7 +650,7 @@ class AnimeEditionFormforend_date(StatesGroup):
 class AnimeEditend_date(StatesGroup):
     end_date = State()
 
-@router.message(AnimeEditionFormforend_date.code)
+@router.message(AnimeEditionFormforend_date.code, F.text)
 async def edit_for_end_date(message: types.Message, state: FSMContext):
     try:
         code = int(message.text.strip())
@@ -665,7 +665,7 @@ async def edit_for_end_date(message: types.Message, state: FSMContext):
     except ValueError:
         await message.answer("Iltimos kodni raqamda kiriting", reply_markup=await cancel_keyboard())
 
-@router.message(AnimeEditend_date.end_date)
+@router.message(AnimeEditend_date.end_date, F.text)
 async def end_date_process(message: types.Message, state: FSMContext):
     text = message.text.strip()
     try:
@@ -700,7 +700,7 @@ class AnimeEditionFormforrating(StatesGroup):
 class AnimeEditrating(StatesGroup):
     rating = State()
 
-@router.message(AnimeEditionFormforrating.code)
+@router.message(AnimeEditionFormforrating.code, F.text)
 async def edit_for_rating(message: types.Message, state: FSMContext):
     try:
         code = int(message.text.strip())
@@ -715,7 +715,7 @@ async def edit_for_rating(message: types.Message, state: FSMContext):
     except ValueError:
         await message.answer("Iltimos kodni raqamda kiriting", reply_markup=await cancel_keyboard())
 
-@router.message(AnimeEditrating.rating)
+@router.message(AnimeEditrating.rating, F.text)
 async def rating_process(message: types.Message, state: FSMContext):
     rating = message.text.strip()
     if len(rating) > 20:
@@ -748,7 +748,7 @@ class AnimeEditionFormforscore(StatesGroup):
 class AnimeEditscore(StatesGroup):
     score = State()
 
-@router.message(AnimeEditionFormforscore.code)
+@router.message(AnimeEditionFormforscore.code, F.text)
 async def edit_for_score(message: types.Message, state: FSMContext):
     try:
         code = int(message.text.strip())
@@ -763,7 +763,7 @@ async def edit_for_score(message: types.Message, state: FSMContext):
     except ValueError:
         await message.answer("Iltimos kodni raqamda kiriting", reply_markup=await cancel_keyboard())
 
-@router.message(AnimeEditscore.score)
+@router.message(AnimeEditscore.score, F.text)
 async def score_process(message: types.Message, state: FSMContext):
     try:
         new_score = int(message.text.strip())
@@ -797,7 +797,7 @@ class AnimeEditionFormforstudio(StatesGroup):
 class AnimeEditstudio(StatesGroup):
     studio = State()
 
-@router.message(AnimeEditionFormforstudio.code)
+@router.message(AnimeEditionFormforstudio.code, F.text)
 async def edit_for_studio(message: types.Message, state: FSMContext):
     try:
         code = int(message.text.strip())
@@ -812,7 +812,7 @@ async def edit_for_studio(message: types.Message, state: FSMContext):
     except ValueError:
         await message.answer("Iltimos kodni raqamda kiriting", reply_markup=await cancel_keyboard())
 
-@router.message(AnimeEditstudio.studio)
+@router.message(AnimeEditstudio.studio, F.text)
 async def studio_process(message: types.Message, state: FSMContext):
     studio = message.text.strip()
     if len(studio) > 100:
