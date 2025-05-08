@@ -101,7 +101,6 @@ async def admin_message_menu_def():
             [KeyboardButton(text="🍥 Anime habar yuborish")],
             [KeyboardButton(text="🖼️ Rasmli habar"), KeyboardButton(text="🎥 Video bilan habar")],
             [KeyboardButton(text="📎 Fayl yuborish"), KeyboardButton(text="🔁 Habarni forward qilish")],
-            [KeyboardButton(text="⏱️ Rejalashtirish")],
             [KeyboardButton(text="👤 Admin panelga qaytish")],
         ],
         resize_keyboard=True

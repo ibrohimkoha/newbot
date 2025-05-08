@@ -12,6 +12,7 @@ bcrypt==4.3.0
 certifi==2025.1.31
 charset-normalizer==3.4.1
 click==8.1.8
+Django==5.1.7
 ecdsa==0.19.1
 fastapi==0.115.12
 frozenlist==1.5.0
@@ -22,11 +23,13 @@ idna==3.10
 magic-filter==1.0.12
 multidict==6.3.2
 passlib==1.7.4
+pillow==11.2.1
 propcache==0.3.1
 psycopg2-binary==2.9.10
 pyasn1==0.4.8
 pydantic==2.10.6
 pydantic_core==2.27.2
+python-dotenv==1.1.0
 python-jose==3.4.0
 python-multipart==0.0.20
 redis==5.2.1
