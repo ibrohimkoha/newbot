@@ -7,7 +7,7 @@ from aiogram import Router, F, types, Bot
 from config import  API_KEY
 from routers.admin.role import AdminRoleFilter
 from routers.database.database import get_session
-from routers.database.models import get_animes, Anime, AnimeType, AnimeStatus
+from routers.database.models import get_animes, Anime, AnimeType, AnimeStatus, Admin
 from routers.keyboards.keyboard import admin_settings_menu_def, user_main_menu_def, cancel_keyboard, \
     admin_main_menu_def, generate_pagination_markup, edit_anime_menu
 from sqlalchemy import select, func
@@ -74,7 +74,16 @@ async def cmd_create(message: types.Message, state: FSMContext):
 @router.message(F.text == "🚫 Bekor qilish")
 async def cmd_cancel(message: types.Message, state: FSMContext):
     await state.clear()
-    kb = admin_main_menu_def() if message.from_user.id in ADMINS else user_main_menu_def()
+    async with get_session() as session:
+        admins = await session.execute(select(Admin))
+        admins = admins.scalars.all()
+        is_admin = False
+        for admin in admins:
+            if message.from_user.id == admin.telegram_id:
+                is_admin = True
+            else:
+                is_admin = False
+    kb = admin_main_menu_def() if is_admin else user_main_menu_def()
     await message.answer("✅ Jarayon bekor qilindi.", reply_markup=await kb)
 
 @router.message(AnimeCreateState.title)
@@ -585,9 +594,6 @@ async def invalidate_image_for_edit_anime(message: types.Message, state: FSMCont
                 F.chat.type == "private",
                 AdminRoleFilter())
 async def edit_by_code_for_release_date(message: types.Message, state: FSMContext):
-    if message.from_user.id not in ADMINS:
-        await message.answer("Tugmalardan foydalaning", reply_markup=await user_main_menu_def())
-        return
     await state.set_state(AnimeEditionFormforrelease_date.code)
     await message.answer(
         text="Chiqarilish sanasini o'zgartirish uchun anime kodini kiriting (YYYY-MM-DD):",
