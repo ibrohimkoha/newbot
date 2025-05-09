@@ -202,8 +202,13 @@ async def send_photo_message_process(message: types.Message, state: FSMContext, 
             return
         count = 0
         for user in users:
-            await bot.send_photo(photo=image, caption=caption, chat_id=user.telegram_id)
-            count += 1
+            try:
+                await bot.send_photo(photo=image, caption=caption, chat_id=user.telegram_id)
+                count += 1
+            except TelegramBadRequest:
+                pass
+            except TelegramForbiddenError:
+                pass
 
         await state.clear()
         await message.answer("Muvaffaqiyatli yuborildi", reply_markup=await admin_message_menu_def())
@@ -233,8 +238,13 @@ async def send_video_message_process(message: types.Message, state: FSMContext, 
         count = 0
 
         for user in users:
-            await bot.send_video(video=video, caption=caption, chat_id=user.telegram_id)
-            count += 1
+            try:
+                await bot.send_video(video=video, caption=caption, chat_id=user.telegram_id)
+                count += 1
+            except TelegramBadRequest:
+                pass
+            except TelegramForbiddenError:
+                pass
 
         await state.clear()
         await message.answer("Muvaffaqiyatli yuborildi", reply_markup=await admin_message_menu_def())
@@ -266,8 +276,13 @@ async def send_file_message_process(message: types.Message, state: FSMContext, b
         count = 0
 
         for user in users:
-            await bot.send_document(document=file, caption=caption, chat_id=user.telegram_id)
-            count += 1
+            try:
+                await bot.send_document(document=file, caption=caption, chat_id=user.telegram_id)
+                count += 1
+            except TelegramBadRequest:
+                pass
+            except TelegramForbiddenError:
+                pass
 
         await state.clear()
         await message.answer("Muvaffaqiyatli yuborildi", reply_markup=await admin_message_menu_def())
@@ -290,11 +305,16 @@ async def send_forward_message_process(message: types.Message, state: FSMContext
             return
 
         for user in users:
-            await bot.forward_message(
+            try:
+                await bot.forward_message(
                 chat_id=user.telegram_id,
                 from_chat_id=message.chat.id,
                 message_id=message.message_id
             )
+            except TelegramBadRequest:
+                pass
+            except TelegramForbiddenError:
+                pass
         await state.clear()
         await message.answer("Xabar barcha foydalanuvchilarga forward qilindi.")
 

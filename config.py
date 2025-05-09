@@ -1,6 +1,6 @@
 from dotenv import load_dotenv
 import os
-ADMINS = {6149114216, 5415350162}
+
 load_dotenv()
 image_for_bot = "https://ibb.co/fzyKgSMg"
 API_KEY = os.getenv("API_KEY")

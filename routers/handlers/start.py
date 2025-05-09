@@ -4,10 +4,9 @@ from aiogram.fsm.context import FSMContext
 from aiogram.types import InlineKeyboardButton, InlineKeyboardMarkup
 from sqlalchemy import select
 from routers.database.database import get_session
-from routers.database.models import User, Anime, AnimeLanguage
+from routers.database.models import User, Anime, AnimeLanguage, Admin
 from routers.keyboards.keyboard import admin_main_menu_def, user_main_menu_def
 from text_form import response_for_anime
-from config import ADMINS
 
 router = Router()
 
@@ -42,14 +41,31 @@ async def start_handler(message: types.Message, command: CommandObject, state: F
                         return
 
                 else:
-                    if message.from_user.id in ADMINS:
+                    admins = await session.execute(select(Admin))
+                    admins = admins.scalars().all()
+                    is_admin = False
+                    for admin in admins:
+                        if message.from_user.id == admin.telegram_id:
+                            is_admin = True
+                        else:
+                            is_admin = False
+                    if is_admin:
                         await message.answer("Botimga hush kelibman", reply_markup=await admin_main_menu_def())
                         return
                     else:
                         await message.answer(f"Botga hush kelibsiz {message.from_user.first_name}", reply_markup=await user_main_menu_def())
                         return
     except ValueError:
-            if message.from_user.id in ADMINS:
+            async with get_session() as session:
+                admins = await session.execute(select(Admin))
+                admins = admins.scalars().all()
+                is_admin = False
+                for admin in admins:
+                    if message.from_user.id == admin.telegram_id:
+                        is_admin = True
+                    else:
+                        is_admin = False
+            if is_admin:
                 await message.answer("Botimga hush kelibman", reply_markup=await admin_main_menu_def())
                 return
             else:
@@ -59,10 +75,17 @@ async def start_handler(message: types.Message, command: CommandObject, state: F
 @router.message(CommandStart())
 async def start(message: types.Message, state: FSMContext):
     await state.clear()
-    # Foydalanuvchini bazaga qo'shish
-    user_id = message.from_user.id
+    async with get_session() as session:
+        admins = await session.execute(select(Admin))
+        admins = admins.scalars().all()
+        is_admin = False
+        for admin in admins:
+            if message.from_user.id == admin.telegram_id:
+                is_admin = True
+            else:
+                is_admin = False
     # Adminlarni tekshirish
-    if user_id in ADMINS:
+    if is_admin:
         await message.answer("Botimga hush kelibman", reply_markup=await admin_main_menu_def())
     else:
         await message.answer(f"Botga hush kelibsiz {message.from_user.first_name}", reply_markup=await user_main_menu_def())
