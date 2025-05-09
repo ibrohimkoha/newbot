@@ -28,13 +28,11 @@ async def get_anime(callback: CallbackQuery):
             await callback.message.delete()
             async with get_session() as session:
                 admins = await session.execute(select(Admin))
-                admins = admins.scalars.all()
+                admins = admins.scalars().all()
                 is_admin = False
                 for admin in admins:
                     if callback.from_user.id == admin.telegram_id:
                         is_admin = True
-                    else:
-                        is_admin = False
             markup = await admin_main_menu_def() if is_admin else await user_main_menu_def()
             await callback.message.answer("🧐 Anime topilmadi! ", reply_markup=markup)
             with suppress(Exception):
@@ -47,7 +45,7 @@ async def get_anime(callback: CallbackQuery):
             await callback.message.delete()
             async with get_session() as session:
                 admins = await session.execute(select(Admin))
-                admins = admins.scalars.all()
+                admins = admins.scalars().all()
                 is_admin = False
                 for admin in admins:
                     if callback.from_user.id == admin.telegram_id:
@@ -138,15 +136,12 @@ async def get_anime_episode(callback: CallbackQuery):
             anime_result = await session.execute(select(Anime).where(Anime.id == anime_id))
             anime = anime_result.scalar()
             if not anime:
-                async with get_session() as session:
-                    admins = await session.execute(select(Admin))
-                    admins = admins.scalars.all()
-                    is_admin = False
-                    for admin in admins:
-                        if callback.from_user.id == admin.telegram_id:
+                admins = await session.execute(select(Admin))
+                admins = admins.scalars().all()
+                is_admin = False
+                for admin in admins:
+                    if callback.from_user.id == admin.telegram_id:
                             is_admin = True
-                        else:
-                            is_admin = False
                 markup = await admin_main_menu_def() if is_admin else await user_main_menu_def()
                 await callback.message.answer("Anime topilmadi ❌", reply_markup=markup)
                 await callback.answer()
@@ -179,13 +174,11 @@ async def get_anime_episode(callback: CallbackQuery):
 
             if not episode:
                 admins = await session.execute(select(Admin))
-                admins = admins.scalars.all()
+                admins = admins.scalars().all()
                 is_admin = False
                 for admin in admins:
                     if callback.from_user.id == admin.telegram_id:
                         is_admin = True
-                    else:
-                        is_admin = False
                 markup = await admin_main_menu_def() if is_admin else await user_main_menu_def()
                 await callback.message.answer("Bu epizod topilmadi ❌",reply_markup=markup)
                 await callback.answer()

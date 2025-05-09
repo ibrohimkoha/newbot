@@ -76,13 +76,11 @@ async def cmd_cancel(message: types.Message, state: FSMContext):
     await state.clear()
     async with get_session() as session:
         admins = await session.execute(select(Admin))
-        admins = admins.scalars.all()
+        admins = admins.scalars().all()
         is_admin = False
         for admin in admins:
             if message.from_user.id == admin.telegram_id:
                 is_admin = True
-            else:
-                is_admin = False
     kb = admin_main_menu_def() if is_admin else user_main_menu_def()
     await message.answer("✅ Jarayon bekor qilindi.", reply_markup=await kb)
 

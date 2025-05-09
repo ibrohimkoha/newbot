@@ -82,8 +82,6 @@ async def start(message: types.Message, state: FSMContext):
         for admin in admins:
             if message.from_user.id == admin.telegram_id:
                 is_admin = True
-            else:
-                is_admin = False
     # Adminlarni tekshirish
     if is_admin:
         await message.answer("Botimga hush kelibman", reply_markup=await admin_main_menu_def())
