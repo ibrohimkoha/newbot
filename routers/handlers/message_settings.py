@@ -1,7 +1,7 @@
 import re
-
+import asyncio
 from aiogram import types, Router, F, Bot
-from aiogram.exceptions import TelegramBadRequest, TelegramForbiddenError
+from aiogram.exceptions import TelegramBadRequest, TelegramForbiddenError, TelegramRetryAfter
 from aiogram.fsm.context import FSMContext
 from aiogram.fsm.state import StatesGroup, State
 from sqlalchemy import select
@@ -297,25 +297,25 @@ async def send_forward_message(message: types.Message, state: FSMContext):
 
 @router.message(GetForwardMessage.forward)
 async def send_forward_message_process(message: types.Message, state: FSMContext, bot: Bot):
+    await message.answer("Yuborish boshlandi. Iltimos, kuting...")
+    asyncio.create_task(_background_forward_task(message, bot))
+    await state.clear()
+
+
+async def _background_forward_task(message: types.Message, bot: Bot):
     async with get_session() as session:
         users = await session.execute(select(User))
         users = users.scalars().all()
-        if not users:
-            await message.answer("Userlar yo'q")
-            return
 
         for user in users:
             try:
                 await bot.forward_message(
-                chat_id=user.telegram_id,
-                from_chat_id=message.chat.id,
-                message_id=message.message_id
-            )
-            except TelegramBadRequest:
-                pass
-            except TelegramForbiddenError:
-                pass
-        await state.clear()
-        await message.answer("Xabar barcha foydalanuvchilarga forward qilindi.")
-
-
+                    chat_id=user.telegram_id,
+                    from_chat_id=message.chat.id,
+                    message_id=message.message_id
+                )
+                await asyncio.sleep(0.6)
+            except TelegramRetryAfter as e:
+                await asyncio.sleep(e.retry_after)
+            except (TelegramBadRequest, TelegramForbiddenError):
+                continue
