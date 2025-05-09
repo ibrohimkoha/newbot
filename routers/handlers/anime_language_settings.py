@@ -3,7 +3,6 @@ from aiogram.fsm.context import FSMContext
 from aiogram.fsm.state import StatesGroup, State
 from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton, CallbackQuery
 
-from config import ADMINS
 from routers.admin.role import AdminRoleFilter
 from routers.database.database import get_session
 from routers.database.models import Anime, AnimeLanguage, Episode

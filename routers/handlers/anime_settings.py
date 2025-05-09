@@ -4,7 +4,7 @@ from datetime import datetime
 from aiogram.fsm.context import FSMContext
 from aiogram.fsm.state import StatesGroup, State
 from aiogram import Router, F, types, Bot
-from config import ADMINS, API_KEY
+from config import  API_KEY
 from routers.admin.role import AdminRoleFilter
 from routers.database.database import get_session
 from routers.database.models import get_animes, Anime, AnimeType, AnimeStatus

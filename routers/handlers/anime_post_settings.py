@@ -10,7 +10,7 @@ from routers.database.database import get_session
 from routers.database.models import Channel, Anime, Post
 from routers.handlers.anime_language_settings import AddChannelStates, DeleteChannelStates
 from routers.keyboards.keyboard import admin_post_menu_def, user_main_menu_def, cancel_keyboard, admin_main_menu_def
-from config import ADMINS
+
 from text_form import response_for_anime
 
 router = Router()

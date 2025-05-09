@@ -7,7 +7,7 @@ from routers.database.database import get_session
 from sqlalchemy import select
 from routers.database.models import Anime, AnimeLanguage, Episode
 from routers.keyboards.keyboard import admin_main_menu_def, user_main_menu_def
-from config import ADMINS
+
 
 router = Router()
 
